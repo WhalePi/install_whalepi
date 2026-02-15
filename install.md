@@ -85,30 +85,63 @@ sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
 ```
 
-### 🚚 Transfer the Install Package
-
-Grab the zip folder and transfer it the pizero via
-
-rsync -avz --progress /home/jdjm/Desktop/pamguard_pizero.zip jdjm@whalepi.local:/home/whalepi/
-
-Then unzip the file via
-
-Enter the folder using
-cd pamguard_pizero
-
-To test things are working start the watchdog. 
-
-./pamdog_pizero_tmux
-
-This starts the watchdog ina  new tmux session which means we can log out of the pi and back in again and still see what's going on with PAMGuard. To access the session simply use
-
-tmux attach -t pamguard
-
-You should see the typical window for pamgaurd. Use commands such as start, stop and summary to control PAMGuard. See more here. 
-
-
-
-
+It sounds like you're setting up some serious bioacoustics gear! Here is a cleaner, more professional version of those instructions to help you (or anyone else) follow the deployment process without any friction.
 
 ---
+
+## 🚚 Transfer & Install Package
+
+Follow these steps to move the PAMGuard installation to your Pi Zero and get the watchdog running.
+
+### 1. Transfer the Files
+
+From your local machine, use `rsync` to securely move the zip folder to the Pi Zero:
+
+```bash
+rsync -avz --progress /home/jdjm/Desktop/pamguard_pizero.zip jdjm@whalepi.local:/home/whalepi/
+
+```
+
+### 2. Extract and Enter
+
+Once the transfer is complete, unzip the package and move into the directory:
+
+```bash
+unzip pamguard_pizero.zip
+cd pamguard_pizero
+
+```
+
+### 3. Start the Watchdog
+
+To ensure things are running smoothly, launch the watchdog script. This initializes a new **tmux** session, allowing the process to persist even if you disconnect from SSH.
+
+```bash
+./pamdog_pizero_tmux.sh
+
+```
+
+---
+
+## 🛠 Managing the Session
+
+Since PAMGuard is running inside `tmux`, you can log out of the Pi at any time without killing the process.
+
+* **To Re-attach:** Use this command to see the current status:
+```bash
+tmux attach -t pamguard
+```
+
+* **Control Commands:** Once inside the session, you can manage PAMGuard using:
+* `start` – Begins audio processing.
+* `stop` – Pauses/Ends audio processing.
+* `summary` – Displays current stats.
+* `statusz` - checks whether pamgaurd is runnning (1) or not (0).
+
+For a full list of commands see [here](https://github.com/PAMGuard/PAMGuard/wiki/UDP-Commands);
+
+> [!TIP]
+> To "detach" from the session without stopping PAMGuard, press `Ctrl+B` followed by `D`.
+
+
 
