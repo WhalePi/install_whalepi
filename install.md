@@ -136,7 +136,7 @@ tmux attach -t pamguard
 * `start` – Begins audio processing.
 * `stop` – Pauses/Ends audio processing.
 * `summary` – Displays current stats.
-* `statusz` - checks whether pamgaurd is runnning (1) or not (0).
+* `status` - checks whether pamgaurd is runnning (1) or not (0).
 
 For a full list of commands see [here](https://github.com/PAMGuard/PAMGuard/wiki/UDP-Commands);
 
