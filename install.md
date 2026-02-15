@@ -1,37 +1,88 @@
-# Install whalepi
 
-## Introduction
+# 🐳 Install WhalePi
 
-This guide takes you through how to install WhalePi on a Raspberry Pi Zero
+## 📝 Introduction
 
-## Install Raspberry Pi OS
+This guide takes you through how to install **WhalePi** on a Raspberry Pi Zero.
 
-Install Raspberry Pi OS Lite. The easiest way to do this is using Raspberry Pi Imager on another Raspberry Pi device. Note we do NOT want a desktop environment on here so make sure you install the Lite version of Raspberry Pi OS. Set the user to ```whalepi``` and ensure you have a password set. When asked about the ssh address, select a unique name for the raspberry pi zero. e.g. whalepi_13. This means we can ssh to multipe devices later. Here we have used ``whalepi`` as the unique address. 
+---
 
-## Log in via SSH
+## 💾 Install Raspberry Pi OS
 
-Use terminal to log in via SSH. Note your computer must be connected to the same WiFi network as the Pi Zero for this to work. 
+1. **Install Raspberry Pi OS Lite:** The easiest way to do this is using **Raspberry Pi Imager** on another device.
+2. ⚠️ **Important:** We do **NOT** want a desktop environment, so ensure you select the **Lite** version.
+3. 👤 **User Setup:** Set the username to `whalepi` and ensure you have a password set.
+4. 🌐 **Hostname:** When asked about the SSH address, select a unique name (e.g., `whalepi_13`). This allows us to SSH to multiple devices later. In this guide, we use `whalepi` as the unique address.
+
+---
+
+## 💻 Log in via SSH
+
+Use your terminal to log in via SSH.
+
+> [!NOTE]
+> Your computer must be connected to the **same WiFi network** as the Pi Zero for this to work. 📶
 
 ```bash
 ssh whalepi@whalepi.local
+
 ```
-When prompted enter the password. You are now connected to the Raspberry Pi Zero
-Note that, if you have been using previous versions of 
 
-## Install pre-requisites 
+When prompted, enter your password. You are now connected to the Raspberry Pi Zero! 🎉
 
-### Java 21
-Install Java 21 
+Note if you have re-nstalled the OS you may get a scary looking error about a encryption and middle man attack. Just ignore this and run
+
+```bash
+
+```
+
+---
+
+## ⚙️ Install Pre-requisites
+
+### ☕ Java 21
+
+WhalePi requires Java 21 to run. Install it using the following commands:
 
 ```bash
 sudo apt update
 sudo apt install openjdk-21-jdk
+
 ```
 
-### Enable Bluetooth serial
-We need to enable Bluetooth. 
+### 🔹 Enable Bluetooth Serial
 
-### Trasnfer the install package
+We need to enable the Bluetooth stack for serial communication. 📱
 
+By default, the Bluetooth stack on the Pi does not enable the Serial Port Profile. We need to modify the Bluetooth service configuration to run in "compatibility mode." Enable Compatibility Mode
 
+Open the Bluetooth service file:
 
+sudo nano /etc/systemd/system/dbus-org.bluez.service
+
+Find the line starting with ExecStart=/usr/lib/bluetooth/bluetoothd.
+
+Add a -C (compatibility flag) at the end of that line.
+
+On the line immediately below it, add ExecStartPost=/usr/bin/sdptool add SP.
+
+It should look like this: Plaintext
+
+    ExecStart=/usr/lib/bluetooth/bluetoothd -C
+    ExecStartPost=/usr/bin/sdptool add SP
+
+Save and exit (Ctrl+O, Enter, Ctrl+X).
+
+Restart Bluetooth Services
+
+Apply the changes by reloading the daemon:
+
+sudo systemctl daemon-reload
+sudo systemctl restart bluetooth
+
+### 🚚 Transfer the Install Package
+
+Next 
+---
+
+Would you like me to help you write the instructions for the **Bluetooth configuration** or the **Package Transfer** section?
