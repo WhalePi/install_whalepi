@@ -58,18 +58,21 @@ By default, the Bluetooth stack on the Pi does not enable the Serial Port Profil
 
 Open the Bluetooth service file:
 
+```bash
 sudo nano /etc/systemd/system/dbus-org.bluez.service
-
+```
 Find the line starting with ExecStart=/usr/lib/bluetooth/bluetoothd.
 
-Add a -C (compatibility flag) at the end of that line.
+Add a ```-C``` (compatibility flag) at the end of that line.
 
-On the line immediately below it, add ExecStartPost=/usr/bin/sdptool add SP.
+On the line immediately below it, add ```ExecStartPost=/usr/bin/sdptool add SP```.
 
-It should look like this: Plaintext
+It should look like this: 
 
+```
     ExecStart=/usr/lib/bluetooth/bluetoothd -C
     ExecStartPost=/usr/bin/sdptool add SP
+```
 
 Save and exit (Ctrl+O, Enter, Ctrl+X).
 
@@ -77,8 +80,10 @@ Restart Bluetooth Services
 
 Apply the changes by reloading the daemon:
 
+```bash
 sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
+```
 
 ### 🚚 Transfer the Install Package
 
