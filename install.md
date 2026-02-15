@@ -33,7 +33,7 @@ When prompted, enter your password. You are now connected to the Raspberry Pi Ze
 Note if you have re-nstalled the OS you may get a scary looking error about a encryption and middle man attack. Just ignore this and run
 
 ```bash
-
+ssh-keygen -f '/home/jdjm/.ssh/known_hosts' -R 'whalepi.local'
 ```
 
 ---
