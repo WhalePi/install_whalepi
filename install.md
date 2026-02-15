@@ -87,7 +87,28 @@ sudo systemctl restart bluetooth
 
 ### 🚚 Transfer the Install Package
 
-Next 
+Grab the zip folder and transfer it the pizero via
+
+rsync -avz --progress /home/jdjm/Desktop/pamguard_pizero.zip jdjm@whalepi.local:/home/whalepi/
+
+Then unzip the file via
+
+Enter the folder using
+cd pamguard_pizero
+
+To test things are working start the watchdog. 
+
+./pamdog_pizero_tmux
+
+This starts the watchdog ina  new tmux session which means we can log out of the pi and back in again and still see what's going on with PAMGuard. To access the session simply use
+
+tmux attach -t pamguard
+
+You should see the typical window for pamgaurd. Use commands such as start, stop and summary to control PAMGuard. See more here. 
+
+
+
+
+
 ---
 
-Would you like me to help you write the instructions for the **Bluetooth configuration** or the **Package Transfer** section?
