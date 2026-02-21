@@ -85,12 +85,19 @@ sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
 ```
 
-### 🔹 Install tmux
+### 🐚 Install tmux
 tmux is needed so we can define a session in terminal which we can then come back , for example when using ssh to communicate with the PI zero. INstall tmux via
 
 ```bash
 sudo apt update
 sudo apt install tmux
+```
+### 🎙️ Set microphone volume to zero (IMPORTANT)
+
+The COSMOS card has a strange issue where, if the microphone volume is set to anything other than zero, then there is cross talk. Disable the microphone by setting
+
+```bash
+ amixer -c 1 set Line 0
 ```
 
 ---
