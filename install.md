@@ -98,8 +98,7 @@ Follow these steps to move the PAMGuard installation to your Pi Zero and get the
 From your local machine, use `rsync` to securely move the zip folder to the Pi Zero:
 
 ```bash
-rsync -avz --progress /home/jdjm/Desktop/pamguard_pizero.zip jdjm@whalepi.local:/home/whalepi/
-
+rsync -avz --progress /home/whalepi/pamguard_pizero whalepi@whalepi.local:/home/whalepi/
 ```
 
 ### 2. Extract and Enter
