@@ -85,7 +85,13 @@ sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
 ```
 
-It sounds like you're setting up some serious bioacoustics gear! Here is a cleaner, more professional version of those instructions to help you (or anyone else) follow the deployment process without any friction.
+### 🔹 Install tmux
+tmux is needed so we can define a session in terminal which we can then come back , for example when using ssh to communicate with the PI zero. INstall tmux via
+
+```bash
+sudo apt update
+sudo apt install tmux
+```
 
 ---
 
