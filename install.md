@@ -85,6 +85,19 @@ sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
 ```
 
+### 🐍 Python Dependencies
+
+Install the required Python packages - these are needed if using the more advanced low power bluetooth feature in the watchdog.
+
+```bash
+# Install system dependencies
+sudo apt-get update
+sudo apt-get install python3-dbus python3-gi
+
+# Install bluezero library
+pip3 install bluezero
+```
+
 ### 🐚 Install tmux
 tmux is needed so we can define a session in terminal which we can then come back , for example when using ssh to communicate with the PI zero. INstall tmux via
 
