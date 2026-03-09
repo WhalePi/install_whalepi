@@ -50,9 +50,33 @@ sudo apt install openjdk-21-jdk
 
 ```
 
+### 🐍 Python Dependencies
+
+Install the required Python packages - these are needed if using the more advanced low power bluetooth feature in the watchdog.
+
+```bash
+# Install system dependencies
+sudo apt-get update
+sudo apt-get install python3-dbus python3-gi
+
+# Install bluezero library
+pip3 install bluezero
+```
+
 ### 🔹 Enable Bluetooth Serial
 
-We need to enable the Bluetooth stack for serial communication. 📱
+#### Bluetooth BL
+
+WhalePi uses the latest low power bluetooth by default. This requires several dependencies that can be installed by running a script in the utils folder. Navigate to the `utils` folder within the install package and run the install script via 
+
+```
+./ble_install.sh
+```
+This should handle everything that is needed. 
+
+#### Bluetooth Serial (Legacy)
+
+Optional - we need to enable the Bluetooth stack for serial communication to use the legacy Bluetooth Serial comms which is an option for the WatchDog.  📱
 
 By default, the Bluetooth stack on the Pi does not enable the Serial Port Profile. We need to modify the Bluetooth service configuration to run in "compatibility mode." Enable Compatibility Mode
 
@@ -85,18 +109,6 @@ sudo systemctl daemon-reload
 sudo systemctl restart bluetooth
 ```
 
-### 🐍 Python Dependencies
-
-Install the required Python packages - these are needed if using the more advanced low power bluetooth feature in the watchdog.
-
-```bash
-# Install system dependencies
-sudo apt-get update
-sudo apt-get install python3-dbus python3-gi
-
-# Install bluezero library
-pip3 install bluezero
-```
 
 ### 🐚 Install tmux
 tmux is needed so we can define a session in terminal which we can then come back , for example when using ssh to communicate with the PI zero. INstall tmux via
