@@ -1,1 +1,8 @@
-# install_whalepi
+# WhalePi
+
+##
+Welcome to WhalePi, a flexible passive acoustic recording and rela-time analysis system based on a RaspberryPi Zero and [PAMGaurd](www.pamguard.org). The aim of WhalePi is to create a flexible medium-power recording system for cetaceans. Cetaceans cover over 8 octaves, from the 100Hz calls of Blue Whales to the 130,000 Hz clicks of Kogia and porpoises with some broadband click components going even higher in frequency. This emans any recording sysetm needs to have a both a high dynamic range (i.e. 24 bit), a high sample rate (i.e. 384,000 kS/s) and ideally multiple channels. WhalePi provides provides a solution to create such a system by running PAMGuard software on low-cost hardware, particularly a COSMOS DAQ card and RsspberryPi Zero 2 W. 
+
+PAMGuard is a highly flexible module program that allows users to create an acoustic workflow for real time analysis and also provides integration to various bits of hardware, such as sound cards, GPS etc. Whalepi allows users to set up a PAMGaurd confiuration and then run it on a RaspberryPi. Most modern RaspberryPi boards will work, but WhalePi is designed to run efficiently on a RaspberryPi Zero 2 W which has a medium-level power consumption - this means WhalePi can be deployed autonomously for days or weeks on large 12V battery or using solar panels. The RaspberryPi supports up to 1TB of stroage for recordings or detection - for example, the system could save only the output from PAMGuard's automted click detector which would mean storage is essentially unlimited.  
+
+The COSMOS soundcard conencts to the Pi and drivers have been developed to run it ewfficeintly from PAMGuard. The 24 bit recording provide high dynamic range recordings a
