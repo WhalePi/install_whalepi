@@ -111,12 +111,18 @@ sudo systemctl restart bluetooth
 
 
 ### 🐚 Install tmux
-tmux is needed so we can define a session in terminal which we can then come back , for example when using ssh to communicate with the PI zero. INstall tmux via
+tmux is needed so we can define a session in terminal which we can then come back , for example when using ssh to communicate with the PI zero. Install tmux via
 
 ```bash
 sudo apt update
 sudo apt install tmux
 ```
+THe tmux script also checks the `whalepidog_settings.json` file to check if daemon is set to true and therefore needs `jq` installed via
+
+```bash
+sudo apt install jq
+```
+
 ### 🎙️ Set microphone volume to zero (IMPORTANT)
 
 The COSMOS card has a strange issue where, if the microphone volume is set to anything other than zero, then there is cross talk. Disable the microphone by setting
