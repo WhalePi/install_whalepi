@@ -186,12 +186,12 @@ Create a folder via
 ```bash
 mkdir /home/whalepi/PAMRecordings
 ```
-Install sqlite 3 dependencies and create a database file
+Install sqlite 3 dependencies and create a blank database file
 
 ```bash
 sudo apt update
 sudo apt install sqlite3
-sqlite3 /home/whalepi/whalepi_database.sqlite3
+sqlite3 /home/whalepi/whalepi_database.sqlite3 "VACUUM;"
 ```
 
 ### 3. Start the Watchdog
