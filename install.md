@@ -194,7 +194,7 @@ sudo apt install sqlite3
 sqlite3 /home/whalepi/whalepi_database.sqlite3 "VACUUM;"
 ```
 
-### 3. Start the Watchdog
+## Start the Watchdog
 
 To ensure things are running smoothly, launch the watchdog script. This initializes a new **tmux** session, allowing the process to persist even if you disconnect from SSH.
 
