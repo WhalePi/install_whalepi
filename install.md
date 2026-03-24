@@ -16,14 +16,18 @@ This guide takes you through how to install **WhalePi** on a Raspberry Pi Zero.
 
 ---
 
+
+> [!NOTE]
+> The RaspberryPi Zero must be connected to the internet for the rest of the install process. 📶
+
 ## 💻 Log in via SSH or Raspberry Pi Connect
 
 ### SSH 
 
-Use your terminal to log in via SSH
-
 > [!NOTE]
 > Your computer must be connected to the **same WiFi network** as the Pi Zero for this to work. 📶
+
+Use your terminal to log in via SSH
 
 ```bash
 ssh whalepi@whalepi.local
