@@ -125,11 +125,15 @@ tmux is needed so we can define a session in terminal which we can then come bac
 sudo apt update
 sudo apt install tmux
 ```
-THe tmux script also checks the `whalepidog_settings.json` file to check if daemon is set to true and therefore needs `jq` installed via
+The tmux script also checks the `whalepidog_settings.json` file to check if daemon is set to true and therefore needs `jq` installed via
 
 ```bash
 sudo apt install jq
 ```
+
+> [!NOTE]
+> If you do not install jq, then an error will show saying the daemon was not set to true - this is because the whalepidog_settings.json file cannot be read and returns null for all fields
+
 
 ### 🎙️ Set microphone volume to zero (IMPORTANT)
 
