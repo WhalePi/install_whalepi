@@ -16,9 +16,11 @@ This guide takes you through how to install **WhalePi** on a Raspberry Pi Zero.
 
 ---
 
-## 💻 Log in via SSH
+## 💻 Log in via SSH or Raspberry Pi Connect
 
-Use your terminal to log in via SSH.
+### SSH 
+
+Use your terminal to log in via SSH
 
 > [!NOTE]
 > Your computer must be connected to the **same WiFi network** as the Pi Zero for this to work. 📶
@@ -35,6 +37,10 @@ Note if you have re-nstalled the OS you may get a scary looking error about a en
 ```bash
 ssh-keygen -f '/home/jdjm/.ssh/known_hosts' -R 'whalepi.local'
 ```
+
+### Raspberry Pi Connect
+
+If Raspberry Pi connect was set up during installing RaspberryPi OS then it's easy to connect from any internat connected PC via the [Raspberry Pi Connect website](https://www.raspberrypi.com/software/connect/). 
 
 ---
 
@@ -146,7 +152,7 @@ Navigate to Interface Options. Select I2C and choose Yes to enable it. Finish an
 
 Follow these steps to move the PAMGuard installation to your Pi Zero and get the watchdog running.
 
-### 1. Transfer the Files
+### Transfer the Files
 
 From your _local machine_, use `rsync` to securely move the zip folder to the Pi Zero:
 
@@ -154,14 +160,29 @@ From your _local machine_, use `rsync` to securely move the zip folder to the Pi
 rsync -avz --progress /home/whalepi/pamguard_pizero whalepi@whalepi.local:/home/whalepi/
 ```
 
-### 2. Extract and Enter
+### Extract and Enter
 
 Once the transfer is complete, unzip the package and move into the directory:
 
 ```bash
 unzip pamguard_pizero.zip
 cd pamguard_pizero
+```
 
+### Set up the recording folder and database
+
+We need a recording folder and directory in the user root direct. 
+
+Create a folder via 
+```bash
+mkdir /home/whalepi/PAMRecordings
+```
+Install sqlite 3 dependencies and create a database file
+
+```bash
+sudo apt update
+sudo apt install sqlite3
+sqlite3 /home/whalepi/whalepi_database.sqlite3
 ```
 
 ### 3. Start the Watchdog
@@ -170,7 +191,6 @@ To ensure things are running smoothly, launch the watchdog script. This initiali
 
 ```bash
 ./pamdog_pizero_tmux.sh
-
 ```
 
 ---
@@ -189,6 +209,8 @@ tmux attach -t pamguard
 * `stop` – Pauses/Ends audio processing.
 * `summary` – Displays current stats.
 * `status` - checks whether pamgaurd is runnning (1) or not (0).
+*  `copydata` - checks whether a volume is present and copies the data from the PAMRecordings folder and database file to the root directory of the colume. 
+
 
 For a full list of commands see [here](https://github.com/PAMGuard/PAMGuard/wiki/UDP-Commands);
 
