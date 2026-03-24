@@ -69,9 +69,6 @@ Install the required Python packages - these are needed if using the more advanc
 sudo apt-get update
 sudo apt-get install python3-dbus python3-gi
 sudo apt install python3-pip -y
-
-# Install bluezero library
-pip3 install bluezero
 ```
 
 ### 🔹 Enable Bluetooth Serial
@@ -81,7 +78,7 @@ pip3 install bluezero
 WhalePi uses the latest low power bluetooth by default. This requires several dependencies that can be installed by running a script in the utils folder. Navigate to the `utils` folder within the install package and run the install script via 
 
 ```
-./ble_install.sh
+sudo ./ble_install.sh
 ```
 This should handle everything that is needed. 
 
