@@ -64,6 +64,7 @@ Install the required Python packages - these are needed if using the more advanc
 # Install system dependencies
 sudo apt-get update
 sudo apt-get install python3-dbus python3-gi
+sudo apt install python3-pip -y
 
 # Install bluezero library
 pip3 install bluezero
