@@ -144,7 +144,7 @@ The COSMOS card has a strange issue where, if the microphone volume is set to an
 I2C communication is needed for the depth sensors. Run
 
 ```bash
-sudo raspi-config in your terminal.
+sudo raspi-config
 ```
 Navigate to Interface Options. Select I2C and choose Yes to enable it. Finish and reboot the Pi.
 
