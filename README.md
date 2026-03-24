@@ -9,6 +9,19 @@ The COSMOS sound card connects to the Raspberry Pi and drivers have been develop
 
 WhalePi  does not come with plans for an  housing but the COSMOS sound card and Raspberry Pi are relatively compact.  They can be mounted inside a small Peli Case or underwater housing like those made by [BlueRobotics](https://bluerobotics.com/).  This potentially allows you to create an advanced PAM system for under $500. While WhalePi won’t replace devices like SoundTraps or CPODs it’s useful for situations where flexibility cost and/or real-time communication are important. 
 
+---
+
+## How WhalePi works (high level)
+
+WhalePi is essentially:
+- A Raspberry Pi running **PAMGuard** (the analysis engine)
+- A high performance audio front-end (COSMOS DAQ) for **24-bit** recording at high sample rates
+- A **watchdog script** that starts and monitors PAMGuard, and (optionally) exposes status/control over Bluetooth for use with a phone app
+
+Typical workflows include:
+- **Record raw audio** for later analysis
+- **Run real-time detection** (e.g., click detection) and only save detections/summary products to reduce storage usage
+- **Log metadata** (GPS, depth, temperature) alongside audio/detections
 
 ---
 
@@ -44,19 +57,6 @@ WhalePi  does not come with plans for an  housing but the COSMOS sound card and 
 
 ---
 
-## How WhalePi works (high level)
-
-WhalePi is essentially:
-- A Raspberry Pi running **PAMGuard** (the analysis engine)
-- A high performance audio front-end (COSMOS DAQ) for **24-bit** recording at high sample rates
-- A **watchdog script** that starts and monitors PAMGuard, and (optionally) exposes status/control over Bluetooth for use with a phone app
-
-Typical workflows include:
-- **Record raw audio** for later analysis
-- **Run real-time detection** (e.g., click detection) and only save detections/summary products to reduce storage usage
-- **Log metadata** (GPS, depth, temperature) alongside audio/detections
-
----
 
 ## Running and controlling WhalePi
 
@@ -84,7 +84,7 @@ https://github.com/PAMGuard/PAMGuard/wiki/UDP-Commands
 
 There are three ways to view data, directly  by attaching a monitor to the RaspberryPi Zero, using RaspberryPi Connect and/or using a phone app. 
 
-### Use RaspberryPi Connect
+### Control via Terminal
 
 **Option A: Connect a monitor to the RPi Zero 2**
 - This is the simplest approach for initial bench testing and debugging.
@@ -92,6 +92,7 @@ There are three ways to view data, directly  by attaching a monitor to the Raspb
 **Option B: Raspberry Pi Connect (remote access)**
 - Raspberry Pi Connect provides a remote way to access the Pi without physically attaching a display:
 https://www.raspberrypi.com/software/connect/
+
 
 ### Use the WhalePi phone app
 
