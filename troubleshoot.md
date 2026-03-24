@@ -6,7 +6,7 @@ Sometimes things go wrong with WhalePI. Here are some tips and tricks for troubl
 
 There is a handy utility in the `pamguard_pizero/utils` folder called soundcheck. 
 
-Run using by navigating to the utils folder `cd /home/whalepi/pamguard_pizero/utils` and running
+Yopu can start soundcheck by navigating to the utils folder `cd /home/whalepi/pamguard_pizero/utils` and running
 
 ```bash
 ./soundcheck.sh
