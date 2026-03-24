@@ -11,7 +11,7 @@ Run using by navigating to the utils folder `cd /home/whalepi/pamguard_pizero/ut
 ```bash
 ./soundcheck.sh
 ```
-
+Check the COSMOS card is working by tapping hydrophones and checking the level meters show something happening. 
 
 ```bash
   +============================================================+
