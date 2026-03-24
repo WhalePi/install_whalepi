@@ -122,7 +122,7 @@ sudo apt install python3-pip -y
 WhalePi uses the latest low power bluetooth by default. This requires several dependencies that can be installed by running a script in the utils folder. Navigate to the `utils` folder within the install package and run the install script via 
 
 ```
-sudo ./ble_install.sh
+sudo ./install_ble_deps.sh
 ```
 This should handle everything that is needed. 
 
