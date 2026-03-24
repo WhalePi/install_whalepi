@@ -50,6 +50,50 @@ If Raspberry Pi connect was set up during installing RaspberryPi OS then it's ea
 
 ## ⚙️ Install Pre-requisites
 
+### 🚚 Transfer & Install Package
+
+Follow these steps to move the PAMGuard installation to your Pi Zero and get the watchdog running.
+
+### Transfer the Files
+
+The easiest way to transfer the firmware is to download it from github and then unzip 
+
+```bash
+cd /home/whalepi/
+wget https://github.com/WhalePi/install_whalepi/releases/download/v0.9.0/pamguard_pizero.zip
+```
+
+> [!TIP]
+> From your _local machine_, it is also possible to use `rsync` to securely move the zip folder to the Pi Zero:
+>```bash
+>rsync -avz --progress /home/whalepi/pamguard_pizero.zip whalepi@whalepi.local:/home/whalepi/pamguard_pizero.zip
+>```
+
+### Extract and Enter
+
+Once the transfer is complete, unzip the package and move into the directory:
+
+```bash
+unzip pamguard_pizero.zip
+cd pamguard_pizero
+```
+
+### Set up the recording folder and database
+
+We need a recording folder and directory in the user root direct. 
+
+Create a folder via 
+```bash
+mkdir /home/whalepi/PAMRecordings
+```
+Install sqlite 3 dependencies and create a blank database file
+
+```bash
+sudo apt update
+sudo apt install sqlite3
+sqlite3 /home/whalepi/whalepi_database.sqlite3 "VACUUM;"
+```
+
 ### ☕ Java 21
 
 WhalePi requires Java 21 to run. Install it using the following commands:
@@ -154,49 +198,6 @@ Navigate to Interface Options. Select I2C and choose Yes to enable it. Finish an
 
 ---
 
-## 🚚 Transfer & Install Package
-
-Follow these steps to move the PAMGuard installation to your Pi Zero and get the watchdog running.
-
-### Transfer the Files
-
-The easiest way to transfer the firmware is to download it from github and then unzip 
-
-```bash
-cd /home/whalepi/
-wget https://github.com/WhalePi/install_whalepi/releases/download/v0.9.0/pamguard_pizero.zip
-```
-
-> [!TIP]
-> From your _local machine_, it is also possible to use `rsync` to securely move the zip folder to the Pi Zero:
->```bash
->rsync -avz --progress /home/whalepi/pamguard_pizero.zip whalepi@whalepi.local:/home/whalepi/pamguard_pizero.zip
->```
-
-### Extract and Enter
-
-Once the transfer is complete, unzip the package and move into the directory:
-
-```bash
-unzip pamguard_pizero.zip
-cd pamguard_pizero
-```
-
-### Set up the recording folder and database
-
-We need a recording folder and directory in the user root direct. 
-
-Create a folder via 
-```bash
-mkdir /home/whalepi/PAMRecordings
-```
-Install sqlite 3 dependencies and create a blank database file
-
-```bash
-sudo apt update
-sudo apt install sqlite3
-sqlite3 /home/whalepi/whalepi_database.sqlite3 "VACUUM;"
-```
 
 ## Start the Watchdog
 
