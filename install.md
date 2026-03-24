@@ -154,11 +154,18 @@ Follow these steps to move the PAMGuard installation to your Pi Zero and get the
 
 ### Transfer the Files
 
-From your _local machine_, use `rsync` to securely move the zip folder to the Pi Zero:
+The easiest way to transfer the firmware is to download it from github and then unzip 
 
 ```bash
-rsync -avz --progress /home/whalepi/pamguard_pizero whalepi@whalepi.local:/home/whalepi/
+cd /home/whalepi/
+wget https://github.com/WhalePi/install_whalepi/releases/download/v0.9.0/pamguard_pizero.zip
 ```
+
+> [!TIP]
+> From your _local machine_, it is also possible to use `rsync` to securely move the zip folder to the Pi Zero:
+>```bash
+>rsync -avz --progress /home/whalepi/pamguard_pizero.zip whalepi@whalepi.local:/home/whalepi/pamguard_pizero.zip
+>```
 
 ### Extract and Enter
 
