@@ -71,3 +71,37 @@ Specifically your are looking for something like
 - ttyUSB0 or ttyUSB1 (Standard USB adapters) <-Serial GPS is usually this
 - ttyACM0 (Arduinos or cellular modems)
 - ttyS0 or ttyAMA0 (Onboard GPIO UART)
+
+## Bluetooth
+
+There have been a few issues with Bluetooth installing properly. To check Blueooth is working properly run whalepidog and press `l` as it starts. An obvious Bluetooth error will print to the console if Bluetooth is not initialised correctly. If Bluetooth does not work try installing `pi-bluetooth package`. 
+
+```bash
+sudo apt update
+sudo apt install pi-bluetooth
+```
+
+After installing, try to start it:
+
+```bash
+sudo systemctl enable hciuart
+sudo systemctl start hciuart
+```
+You may need to unblock Bluetooth and see auto on. To unblock use
+
+```bash
+ sudo rfkill unblock bluetooth
+```
+
+Then set the Bluetooth to auto on. The key file is /etc/bluetooth/main.conf. You need to set AutoEnable=true under the [Policy] section: Open teh text file. 
+
+```bash
+sudo nano /etc/bluetooth/main.conf
+```
+In the file navigate to the [Policy] section and uncomment AutoEnable
+
+```
+[Policy]
+AutoEnable=true
+```
+Navigate to the `utils` folder within the install package and run the install script via 
