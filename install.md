@@ -184,7 +184,7 @@ sudo apt install jq
 The COSMOS card has a strange issue where, if the microphone volume is set to anything other than zero, then there is cross talk. Disable the microphone by setting
 
 ```bash
- amixer -c 1 set Line 0
+ amixer -c 0 set Line 0
 ```
 
 ### 🔗 Enable I2C
