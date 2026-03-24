@@ -121,42 +121,17 @@ sudo apt install python3-pip -y
 
 WhalePi uses the latest low power bluetooth by default. This requires several dependencies that can be installed by running a script in the utils folder.
 
-First install the `pi-bluetooth package`
-
-```bash
-sudo apt update
-sudo apt install pi-bluetooth
-```
-
-After installing, try to start it:
-
-```bash
-sudo systemctl enable hciuart
-sudo systemctl start hciuart
-```
-You may need to unblock Bluetooth and see auto on. To unblock use
-
-```bash
- sudo rfkill unblock bluetooth
-```
-
-Then set the Bluetooth to auto on. The key file is /etc/bluetooth/main.conf. You need to set AutoEnable=true under the [Policy] section: Open teh text file. 
-
-```bash
-sudo nano /etc/bluetooth/main.conf
-```
-In the file navigate to the [Policy] section and uncomment AutoEnable
-
-```
-[Policy]
-AutoEnable=true
-```
 Navigate to the `utils` folder within the install package and run the install script via 
 
 ```
 sudo ./install_ble_deps.sh
 ```
-This should handle everything that is needed. 
+
+This should handle most of the dependencies that are needed. It seems that after the intial install it is important to unblock Bluetooth via. 
+
+```bash
+ sudo rfkill unblock bluetooth
+```
 
 #### Bluetooth Serial (Legacy)
 
