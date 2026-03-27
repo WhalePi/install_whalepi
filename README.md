@@ -42,33 +42,47 @@ Typical workflows include:
 
 ## Installing WhalePi
 
-1) **Prepare the Raspberry Pi**
-- Follow the setup instructions in `install.md` to install prerequisites (Java 21, Bluetooth support, tmux, etc.) and configure the Pi.
+### **Prepare the Raspberry Pi**
 
-2) **Download and transfer WhalePi**
-- Download the latest release and transfer it to a user directory called `whalepi` e.g. `/home/whalepi/`.
-- Unzip inside this folder - this should mean there is a folder called `/home/whalepi/pamguard_pizero`.
+  Follow the setup instructions in [install.md](https://github.com/WhalePi/install_whalepi/blob/main/install.md) to install prerequisites and PAMGuard (Java 21, Bluetooth support, tmux, etc.) and configure the Pi.
+  
+### **Start WhalePi**
 
-3) **Start WhalePi**
-- From inside the package directory, start WhalePi using the watchdog script:
-  - `./whalepidog_pizero.sh`
+From inside the directory `/home/whalepi/pamguard_pizero`, start WhalePi using the watchdog script:
 
-> Tip: `install.md` also describes an alternative tmux-based start script (`./pamdog_pizero_tmux.sh`). Use whichever start method your release includes.
+```bash
+  ./whalepidog_pizero_tmux.sh`
+```
+Nothing will happen in terminal - pamguard has been started in the background.
+ 
+### **Set PAMGuard to start automatically**
+   
+Navigate the `/home/whalepi/pamguard_pizero/utils` and run the background installer
+
+```bash
+install_whalepidog_service.sh`
+```
+
+PAMGuard will now start running whenever the Raspberry Pi Zero powers on.
+ 
+> Tip: [troubleshoot.md](https://github.com/WhalePi/install_whalepi/blob/main/troubleshoot.md) has some handy tips for troubleshooting
 
 ---
 
-
 ## Running and controlling WhalePi
 
-Depending on the release you installed, PAMGuard may be launched inside a **tmux** session so it continues running after you disconnect from SSH.
+PAMGuard launched inside a **tmux** session so it continues running after you disconnect from SSH or end the terminal session. There are three ways to interact with PAMGaurd. 
 
-### If using tmux
-- Reattach:
-  - `tmux attach -t pamguard`
-- Detach without stopping (inside tmux):
-  - `Ctrl+B` then `D`
+### Use terminal
 
-### Common control commands
+Attach a keyboard and monitor the to RaspberryPi Zero. Login using the username `whalepi` and the correct password. Then reattach the PAMGuard seeions 
+
+`tmux attach -t pamguard`
+
+This will bring up the ternimal interface.
+
+![install_whalepidog_service]()
+
 When connected to the running session, you can use commands like:
 - `start` – begins audio processing
 - `stop` – pauses/ends audio processing
@@ -78,21 +92,16 @@ When connected to the running session, you can use commands like:
 For the full command set see the PAMGuard UDP command documentation:
 https://github.com/PAMGuard/PAMGuard/wiki/UDP-Commands
 
----
+Detach without stopping (inside tmux):
 
-## Viewing data
+`Ctrl+B` then `D`
 
-There are three ways to view data, directly  by attaching a monitor to the RaspberryPi Zero, using RaspberryPi Connect and/or using a phone app. 
 
-### Control via Terminal
+### Use Raspberry Pi Connect (remote access)**
 
-**Option A: Connect a monitor to the RPi Zero 2**
-- This is the simplest approach for initial bench testing and debugging.
+[Raspberry Pi Connect](https://www.raspberrypi.com/software/connect/) provides a remote way to access the Pi without physically attaching a display: All other functions are exactly as terminal above. 
 
-**Option B: Raspberry Pi Connect (remote access)**
-- Raspberry Pi Connect provides a remote way to access the Pi without physically attaching a display:
-https://www.raspberrypi.com/software/connect/
-
+> Note: Raspberry Pi Connect is super handy because you can access a RaspberryPi from any computer, however it requires an internet connect. To connect the Raspberry Pi to the internet use `raspi-config` to configure WiFi. 
 
 ### Use the WhalePi phone app
 
@@ -113,12 +122,54 @@ Exact output paths depend on your PAMGuard configuration, but in general you sho
 
 If you change the PAMGuard configuration, confirm output directories and available disk space before deployment.
 
----
+## Changing WhalePi Settings
 
-## Deployment checklist (quick)
+WhalePi is based on PAMGuard so the easiest way to change settings is to use a different .psfx PAMGuard settings file. The best way to do this is to build and test the .psfx on a Raspberry Pi 4 or 5. These can run the full graphical user interface version of PAMGuard and you can exactly replicate most of hardware on the RaspberryPi Zero. Once you are happy with the .psfx file save to the `/home/whalepi/pamguard_pizero` folder. Next we will need to change the settings of the watchdog to tell it to open the correct .psfx files. Open the `watchdog_settngs.json` file on the RaspberyPi Zero using
+
+```bash
+cd /home/whalepi/pamguard_pizero
+sudo nano watchdog_settngs.json
+```
+This will bring up the watchdog settings in  basic terminal word processor. 
+
+```json
+{
+   "daemon": true,
+    "pamguardJar": "/home/whalepi/pamguard_pizero/Pamguard-2.02.18a.jar",
+    "startWaitSeconds": 40,
+    "bluetoothSettings": {
+        "bluetoothPairing": true,
+        "bluetoothEnabled": true,
+        "identification": "1A",
+        "bluetoothMode": "BLE",
+        "verbose": true
+    },
+    "psfxFile": "/home/whalepi/pamguard_pizero/pamguard_pizero_nogui.psfx",
+    "otherOptions": "",
+    "udpPort": 8000,
+    "libFolder": "liblinux",
+    "otherVMOptions": "",
+    "checkIntervalSeconds": 30,
+    "deploy": true,
+    "summaryIntervalSeconds": 5,
+    "workingFolder": "",
+    "database": "/home/whalepi/whalepi_database.sqlite3",
+    "msMemory": 100,
+    "wavFolder": "/home/whalepi/PAMRecordings",
+    "recordingPrefix": "PAM1A",
+    "soundCardName": "",
+    "noGui": true,
+    "jre": "java",
+    "mxMemory": 500
+}
+```
+
+Change the `psfxFile` field to the name of your new .psfx file. The other settings fields are described in this document. 
+
+## Deployment checklis
 
 Before leaving the bench:
-- Confirm audio input is working (hydrophone + COSMOS DAQ)
+- Confirm audio input is working (hydrophone + COSMOS DAQ). Use the 
 - Confirm correct sample rate and channel count
 - Confirm outputs are being written where you expect
 - Confirm time sync (and GPS if used)
