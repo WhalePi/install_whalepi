@@ -111,7 +111,7 @@ Detach without stopping (inside tmux):
 The WhalePi phone app is intended for field convenience: checking system status, viewing detections/summary information, and issuing start/stop/status actions without a laptop. It also has some functionaility to allow copying of data from the pi to a hard drive. 
 
 <p align="center">
-  <img width="300" src="resources/flutter_screenshot.png">
+  <img width="500" src="resources/flutter_screenshot.png">
 </p>
 
 
