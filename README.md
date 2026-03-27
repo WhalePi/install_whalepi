@@ -81,10 +81,50 @@ Attach a keyboard and monitor the to RaspberryPi Zero. Login using the username 
 
 This will bring up the ternimal interface.
 
-<p align="center">
-  <img width="300" src="resources/whalepi_terminal.png">
-</p>
+```bash
+──────────────────────────────────────────────────────────────────────
+  WhalePIDog – PAMGuard Summary View           Time: 12:01:31
+──────────────────────────────────────────────────────────────────────
+  Dog: RUNNING   PAM: RUNNING   Up: 1m 17s   Restarts: 0   Port: 8000
 
+  ┌─ Sound Acquisition ────────────────────────────────────────
+  │ Ch 0  RMS   -90.1 dB  [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]
+  │ Ch 0  Pk    -63.3 dB  [████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]  [LOW ]
+  │
+  │ Ch 1  RMS   -91.0 dB  [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]
+  │ Ch 1  Pk    -78.0 dB  [█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]  [LOW ]
+  │
+  └───────────────────────────────────────────────────────────
+
+  ┌─ Sound Recorder ──────────────────────────────────────────
+  │ State:  ● RECORDING    Button: start
+  │ Disk free: ████████░░░░░░░░░░░░░░░░░░░░░░    137.0 GB
+  └───────────────────────────────────────────────────────────
+
+  ┌─ GPS ─────────────────────────────────────────────────────
+  │ Status : NO DATA   Time: 
+  │ Lat    : N 0.000000°   Lon: E 0.000000°
+  │ Heading: 0.0°  ↑ N
+  └───────────────────────────────────────────────────────────
+
+  ┌─ NMEA ────────────────────────────────────────────────────
+  │ $GPGSV,2,2,07,04,18,303,15,09,12,334,,27,01,243,*48
+  └───────────────────────────────────────────────────────────
+
+  ┌─ Analog Sensors ──────────────────────────────────────────
+  │ Depth                 val:   1.9410  V: -0.0590 V
+  │   ███████████░░░░░░░░░
+  └───────────────────────────────────────────────────────────
+
+  ┌─ Pi Temperature ──────────────────────────────────────────
+  │ ██████████████░░░░░░░░░░░░░░░░  48.3 °C
+  └───────────────────────────────────────────────────────────
+
+
+──────────────────────────────────────────────────────────────────────
+  [:] cmd  [s] Summary View  [t] Summary Text  [l] Log  [q] Quit  [h] Help
+  [1] ping  [2] Status  [3] summary  [4] start  [5] stop
+```
 
 When connected to the running session, you can use commands like:
 - `start` – begins audio processing
@@ -104,7 +144,12 @@ Detach without stopping (inside tmux):
 
 [Raspberry Pi Connect](https://www.raspberrypi.com/software/connect/) provides a remote way to access the Pi without physically attaching a display: All other functions are exactly as terminal above. 
 
-> Note: Raspberry Pi Connect is super handy because you can access a RaspberryPi from any computer, however it requires an internet connect. To connect the Raspberry Pi to the internet use `raspi-config` to configure WiFi. 
+<p align="center">
+  <img width="500" src="resources/whalepi_terminal.png">
+</p>
+
+
+> Note: Raspberry Pi Connect is super handy because you can access a RaspberryPi from any computer, however it requires an internet connect. To connect the Raspberry Pi to the internet use `raspi-config` to configure WiFi.
 
 ### Use the WhalePi phone app
 
