@@ -81,7 +81,10 @@ Attach a keyboard and monitor the to RaspberryPi Zero. Login using the username 
 
 This will bring up the ternimal interface.
 
-![install_whalepidog_service]()
+<p align="center">
+  <img width="300" src="resources/whalepi_terminal.png">
+</p>
+
 
 When connected to the running session, you can use commands like:
 - `start` – begins audio processing
@@ -105,7 +108,12 @@ Detach without stopping (inside tmux):
 
 ### Use the WhalePi phone app
 
-The WhalePi phone app is intended for field convenience: checking system status, viewing detections/summary information, and issuing start/stop/status actions without a laptop.
+The WhalePi phone app is intended for field convenience: checking system status, viewing detections/summary information, and issuing start/stop/status actions without a laptop. It also has some functionaility to allow copying of data from the pi to a hard drive. 
+
+<p align="center">
+  <img width="300" src="resources/flutter_screenshot.png">
+</p>
+
 
 Go to the **Releases** section of this repository to find app availability and installation notes (if published alongside the WhalePi release package).
 
