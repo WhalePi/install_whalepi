@@ -1,13 +1,13 @@
 # WhalePi
 
 ##
-Welcome to WhalePi, a flexible passive acoustic recording and real-time analysis system based on a Raspberry Pi Zero and [PAMGuard](www.pamguard.org). The aim of WhalePi is to create a flexible medium-power recording system for cetaceans. Cetaceans cover over twelve octaves, from the 100Hz calls of Blue Whales to the 130,000 Hz clicks of Kogia and porpoises, with some broadband click components going even higher in frequency. This means any recording system to cover all species needs to have both a high dynamic range (i.e., 24-bit), a high sample rate (i.e. 384,000 kS/s), and ideally multiple channels. WhalePi provides a solution to create such a system by running PAMGuard software on low-cost hardware, particularly a COSMOS DAQ card and Raspberry Pi Zero 2 W. 
+Welcome to WhalePi, a flexible passive acoustic recording and real-time analysis system based on a Raspberry Pi Zero and [PAMGuard](www.pamguard.org). The aim of WhalePi is to create a adaptable medium-power recording system for cetaceans. Cetaceans cover over twelve octaves, from the 100Hz calls of Blue Whales to the 130,000 Hz clicks of Kogia and porpoises, with some broadband click components going even higher in frequency. This means any recording system to cover all species needs to have both a high dynamic range (i.e. 24-bit), a high sample rate (i.e. 384,000 kS/s), and ideally multiple channels. WhalePi provides a solution to create such a system by running PAMGuard software on low-cost hardware, particularly a COSMOS DAQ card and Raspberry Pi Zero 2 W. 
 
 PAMGuard is a highly flexible modular programme enabling users to create an acoustic workflow for real-time analysis.  It also integrates with various hardware like sound cards and GPS. WhalePi facilitates setting up a PAMGuard configuration and running it on a Raspberry Pi.  While most modern Raspberry Pi boards work, WhalePi is optimised for the Raspberry Pi Zero 2 W, which has medium power consumption. This allows for autonomous deployment for days or weeks on a large 12V battery or solar panels.  The Raspberry Pi supports up to 1TB of storage for recordings or detection. For instance, the system could save only PAMGuard’s automated click detector output, effectively unlimited storage.  
 
 The COSMOS sound card connects to the Raspberry Pi and drivers have been developed to run it efficiently through PAMGuard.  This allows for 24-bit recordings with high dynamic range.  The sound card can manage stereo channels at a 384 kHz sample rate per channel covering all cetacean species provided a hydrophone with a suitable frequency response is used.  GPS and analogue sensors for depth and temperature can also be integrated. 
 
-WhalePi  does not come with plans for an  housing but the COSMOS sound card and Raspberry Pi are relatively compact.  They can be mounted inside a small Peli Case or underwater housing like those made by [BlueRobotics](https://bluerobotics.com/).  This potentially allows you to create an advanced PAM system for under $500. While WhalePi won’t replace devices like SoundTraps or CPODs it’s useful for situations where flexibility cost and/or real-time communication are important. 
+WhalePi  does not come with plans for a housing but the COSMOS sound card and Raspberry Pi are relatively compact.  They can be mounted inside a small Peli Case or underwater housing like those made by [BlueRobotics](https://bluerobotics.com/).  This potentially allows you to create an advanced PAM system for under $500. While WhalePi won’t replace devices like SoundTraps or CPODs it’s useful for situations where flexibility cost and/or real-time communication are important. 
 
 ---
 
@@ -46,7 +46,7 @@ Typical workflows include:
 
   Follow the setup instructions in [install.md](https://github.com/WhalePi/install_whalepi/blob/main/install.md) to install prerequisites and PAMGuard (Java 21, Bluetooth support, tmux, etc.) and configure the Pi.
   
-### **Start WhalePi**
+### Start WhalePi
 
 From inside the directory `/home/whalepi/pamguard_pizero`, start WhalePi using the watchdog script:
 
@@ -54,8 +54,11 @@ From inside the directory `/home/whalepi/pamguard_pizero`, start WhalePi using t
   ./whalepidog_pizero_tmux.sh`
 ```
 Nothing will happen in terminal - pamguard has been started in the background.
+
+> Tip: `tmux attach -t pamguard` opens the current pamguard session in terminal after the watchdog has started. Note PAMGuard takes around 40s to start. 
+
  
-### **Set PAMGuard to start automatically**
+### Set PAMGuard to start automatically
    
 Navigate the `/home/whalepi/pamguard_pizero/utils` and run the background installer
 
@@ -125,6 +128,8 @@ This will bring up the ternimal interface.
   [:] cmd  [s] Summary View  [t] Summary Text  [l] Log  [q] Quit  [h] Help
   [1] ping  [2] Status  [3] summary  [4] start  [5] stop
 ```
+_The terminal interface of WhalePi_
+
 
 When connected to the running session, you can use commands like:
 - `start` – begins audio processing
@@ -135,12 +140,12 @@ When connected to the running session, you can use commands like:
 For the full command set see the PAMGuard UDP command documentation:
 https://github.com/PAMGuard/PAMGuard/wiki/UDP-Commands
 
-Detach without stopping (inside tmux):
+To detach without stopping (inside tmux) use:
 
 `Ctrl+B` then `D`
 
 
-### Use Raspberry Pi Connect (remote access)**
+### Use Raspberry Pi Connect (remote access)
 
 [Raspberry Pi Connect](https://www.raspberrypi.com/software/connect/) provides a remote way to access the Pi without physically attaching a display: All other functions are exactly as terminal above. 
 
@@ -148,6 +153,7 @@ Detach without stopping (inside tmux):
   <img width="500" src="resources/whalepi_terminal.png">
 </p>
 
+_Screenshot of accessing WhalePi through RaspberryPi Connect_
 
 > Note: Raspberry Pi Connect is super handy because you can access a RaspberryPi from any computer, however it requires an internet connect. To connect the Raspberry Pi to the internet use `raspi-config` to configure WiFi.
 
@@ -156,24 +162,15 @@ Detach without stopping (inside tmux):
 The WhalePi phone app is intended for field convenience: checking system status, viewing detections/summary information, and issuing start/stop/status actions without a laptop. It also has some functionaility to allow copying of data from the pi to a hard drive. 
 
 <p align="center">
-  <img width="500" src="resources/flutter_screenshot.png">
+  <img width="250" src="resources/flutter_screenshot.png">
 </p>
+_Screenshot of the WhalePi app connected to a WhalePi recorder via Bluetooth_
 
-
-Go to the **Releases** section of this repository to find app availability and installation notes (if published alongside the WhalePi release package).
+Go to the **Releases** section of the [WhalePi_flutter repository](https://github.com/WhalePi/whalepi_flutter) to downlaod the app onto an Android phone. 
 
 > Note: Bluetooth setup (BLE / legacy serial) is described in `install.md`. Ensure Bluetooth is configured before relying on the phone app.
 
 ---
-
-## Where outputs are stored (general guidance)
-
-Exact output paths depend on your PAMGuard configuration, but in general you should expect:
-- **Raw audio** (if enabled): stored on the Pi’s configured storage location
-- **Detector outputs** (e.g. clicks): stored as PAMGuard data products (often much smaller than raw audio)
-- **Logs / status**: produced by the watchdog and/or PAMGuard
-
-If you change the PAMGuard configuration, confirm output directories and available disk space before deployment.
 
 ## Changing WhalePi Settings
 
@@ -183,7 +180,7 @@ WhalePi is based on PAMGuard so the easiest way to change settings is to use a d
 cd /home/whalepi/pamguard_pizero
 sudo nano watchdog_settngs.json
 ```
-This will bring up the watchdog settings in  basic terminal word processor. 
+This will bring up the watchdog settings in a basic terminal word processor. 
 
 ```json
 {
@@ -217,26 +214,23 @@ This will bring up the watchdog settings in  basic terminal word processor.
 }
 ```
 
-Change the `psfxFile` field to the name of your new .psfx file. The other settings fields are described in this document. 
+Change the `psfxFile` field to the name of your new .psfx file. The other settings fields are described in the [WhalePiDog README.md](https://github.com/WhalePi/whalepidog/blob/main/README.md)
 
-## Deployment checklis
+## Where outputs are stored (general guidance)
+
+Exact output paths depend on your PAMGuard configuration, but in general you should expect:
+- **Raw audio** (if enabled): stored on the Pi’s configured storage location - "wavFolder"
+- **Detector outputs** (e.g. clicks): stored as PAMGuard data products (often much smaller than raw audio). "wavFolder"
+- **Database**: data such as GPS, metadata and analog sensor data. "database"
+
+If you change the PAMGuard configuration, confirm output directories and available disk space before deployment.
+
+## Deployment checklist
 
 Before leaving the bench:
 - Confirm audio input is working (hydrophone + COSMOS DAQ). Use the 
 - Confirm correct sample rate and channel count
 - Confirm outputs are being written where you expect
-- Confirm time sync (and GPS if used)
 - Confirm power budget and storage budget for the planned duration
 - Confirm remote access method (monitor, Raspberry Pi Connect, and/or phone app)
 - If using sensors (depth/temp), confirm I2C is enabled and sensors are logging
-
----
-
-## Development
-
-This repository focuses on installation and setup for WhalePi on the Raspberry Pi.
-
-If you are contributing:
-- Keep changes small and testable
-- Update docs alongside any changes to install/run scripts
-- Document hardware assumptions (Pi model, DAQ version, sensors)
