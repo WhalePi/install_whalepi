@@ -60,7 +60,7 @@ The easiest way to transfer the firmware is to download it from github and then 
 
 ```bash
 cd /home/whalepi/
-wget https://github.com/WhalePi/install_whalepi/releases/download/v0.9.0/pamguard_pizero.zip
+wget https://github.com/WhalePi/install_whalepi/releases/download/v0.9.1/pamguard_pizero.zip
 ```
 
 > [!TIP]
