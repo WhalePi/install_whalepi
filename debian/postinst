@@ -1,0 +1,30 @@
+#!/bin/sh
+# postinst — run the WhalePi configuration after the package (and its
+# Depends:) have been installed by apt.
+set -e
+
+SCRIPT=/usr/lib/whalepi/install_whalepi.sh
+
+case "$1" in
+  configure)
+    if [ -x "$SCRIPT" ]; then
+      echo "Configuring WhalePi ..."
+      # apt has already pulled the Depends:, so skip the apt stage.
+      # Honour any operator overrides passed in the environment.
+      SKIP_APT=1 \
+      WHALEPI_VERSION="${WHALEPI_VERSION:-v0.9.0}" \
+      WHALEPI_USER="${WHALEPI_USER:-whalepi}" \
+        sh "$SCRIPT" || {
+          echo "WhalePi configuration did not fully complete." >&2
+          echo "You can re-run it later with:" >&2
+          echo "  sudo SKIP_APT=1 sh $SCRIPT" >&2
+        }
+    fi
+    ;;
+  abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

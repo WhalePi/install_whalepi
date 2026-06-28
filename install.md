@@ -48,6 +48,47 @@ If Raspberry Pi connect was set up during installing RaspberryPi OS then it's ea
 
 ---
 
+## 🚀 Quick install (recommended)
+
+Once you are logged in to the Pi and it is connected to the internet, you can install **everything** below with a single command:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh | sudo bash
+```
+
+This downloads and runs [`install_whalepi.sh`](install_whalepi.sh), which installs all prerequisites (Java 21, SQLite, Bluetooth LE, tmux, jq, ...), downloads and unpacks the PAMGuard firmware, creates the recording folder and database, mutes the microphone and enables I2C — i.e. all the manual steps documented below.
+
+Useful options:
+
+```bash
+# Also install the auto-start-on-boot service and start the watchdog now:
+curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh \
+  | sudo INSTALL_SERVICE=1 START_NOW=1 bash
+
+# Also enable legacy Bluetooth Serial (SPP), pick a specific firmware version:
+curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh \
+  | sudo ENABLE_LEGACY_BT=1 WHALEPI_VERSION=v0.9.0 bash
+```
+
+Prefer to inspect before running? Download it first:
+
+```bash
+wget https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh
+less install_whalepi.sh        # review
+chmod +x install_whalepi.sh
+sudo ./install_whalepi.sh
+```
+
+> [!TIP]
+> A `.deb` package is also available so you can install with `sudo apt install ./whalepi_*.deb` and remove with `apt remove whalepi`. See [PACKAGING.md](PACKAGING.md).
+
+After it finishes, reboot (`sudo reboot`) so I2C takes effect, then jump to [Start the Watchdog](#start-the-watchdog).
+
+> [!NOTE]
+> The rest of this document describes the **same steps performed manually**, for reference or if you want to run them individually.
+
+---
+
 ## ⚙️ Install Pre-requisites
 
 ### 🚚 Transfer & Install Package

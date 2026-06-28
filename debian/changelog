@@ -1,0 +1,7 @@
+whalepi (0.9.0-1) stable; urgency=medium
+
+  * Initial Debian packaging of the WhalePi installer.
+  * Installs prerequisites, downloads the PAMGuard firmware (v0.9.0) and
+    configures the Raspberry Pi Zero.
+
+ -- WhalePi <macster110@gmail.com>  Sun, 28 Jun 2026 00:00:00 +0000

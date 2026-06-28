@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+# Build the WhalePi package with debhelper.
+
+%:
+	dh $@
+
+# Don't try to auto-start anything during the build; configuration happens
+# in postinst on the actual Pi.
+override_dh_auto_build:
+override_dh_auto_test:

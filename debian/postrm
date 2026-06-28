@@ -1,0 +1,23 @@
+#!/bin/sh
+# postrm — clean up on purge. We deliberately do NOT delete the user's
+# recordings, database or firmware on a plain "remove"; only on "purge",
+# and even then we leave PAMRecordings and the database untouched so field
+# data is never lost.
+set -e
+
+case "$1" in
+  purge)
+    # Best-effort removal of the unpacked firmware only.
+    HOME_DIR="$(getent passwd whalepi 2>/dev/null | cut -d: -f6)"
+    if [ -n "$HOME_DIR" ] && [ -d "$HOME_DIR/pamguard_pizero" ]; then
+      echo "Removing firmware at $HOME_DIR/pamguard_pizero (recordings/database kept)"
+      rm -rf "$HOME_DIR/pamguard_pizero"
+    fi
+    ;;
+  remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

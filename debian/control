@@ -1,0 +1,31 @@
+Source: whalepi
+Section: science
+Priority: optional
+Maintainer: WhalePi <macster110@gmail.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+Homepage: https://github.com/WhalePi/install_whalepi
+Rules-Requires-Root: no
+
+Package: whalepi
+Architecture: all
+Depends: ${misc:Depends},
+         openjdk-21-jdk,
+         sqlite3,
+         python3-dbus,
+         python3-gi,
+         python3-pip,
+         tmux,
+         jq,
+         unzip,
+         wget,
+         rfkill,
+         alsa-utils
+Recommends: raspi-config
+Description: PAMGuard passive acoustic monitoring for Raspberry Pi Zero
+ WhalePi turns a Raspberry Pi Zero 2 W and a COSMOS DAQ card into a flexible
+ passive acoustic recording and real-time analysis system based on PAMGuard.
+ .
+ This package installs all prerequisites (Java 21, SQLite, Bluetooth LE
+ support, tmux, etc.), downloads and unpacks the PAMGuard firmware, and
+ configures the Pi (I2C, microphone, Bluetooth) ready to run the watchdog.

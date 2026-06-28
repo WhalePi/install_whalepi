@@ -44,7 +44,15 @@ Typical workflows include:
 
 ### **Prepare the Raspberry Pi**
 
-  Follow the setup instructions in [install.md](https://github.com/WhalePi/install_whalepi/blob/main/install.md) to install prerequisites and PAMGuard (Java 21, Bluetooth support, tmux, etc.) and configure the Pi.
+First install **Raspberry Pi OS Lite** (no desktop) with username `whalepi`, and log in over SSH or Raspberry Pi Connect — see [install.md](https://github.com/WhalePi/install_whalepi/blob/main/install.md) for details.
+
+Then, with the Pi connected to the internet, install everything with a single command:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh | sudo bash
+```
+
+This installs all prerequisites (Java 21, Bluetooth support, tmux, etc.), downloads PAMGuard and configures the Pi. Prefer `apt`? A `.deb` is also available (`sudo apt install ./whalepi_*.deb`) — see [PACKAGING.md](https://github.com/WhalePi/install_whalepi/blob/main/PACKAGING.md). To run the steps manually instead, follow [install.md](https://github.com/WhalePi/install_whalepi/blob/main/install.md).
   
 ### Start WhalePi
 
