@@ -58,6 +58,13 @@ curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install
 
 This downloads and runs [`install_whalepi.sh`](install_whalepi.sh), which installs all prerequisites (Java 21, SQLite, Bluetooth LE, tmux, jq, ...), downloads and unpacks the PAMGuard firmware, creates the recording folder and database, mutes the microphone and enables I2C — i.e. all the manual steps documented below.
 
+It will first **ask you to name this WhalePi** — enter a short name of up to 6 letters/digits (e.g. `13`, making the system `WhalePi_13`). This is written into the WhalePiDog settings as the Bluetooth `identification` (`13`) and the recording prefix (`PAM13`). To skip the prompt, pass the name up front:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh \
+  | sudo WHALEPI_NAME=13 bash
+```
+
 Useful options:
 
 ```bash

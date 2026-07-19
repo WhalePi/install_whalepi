@@ -1,0 +1,9 @@
+Template: whalepi/name
+Type: string
+Default: 01
+Description: Short name for this WhalePi system (max 6 letters/digits):
+ Each WhalePi is given a short name. For example "13" makes this system
+ "WhalePi_13": it sets the Bluetooth identification to 13 and the recording
+ file prefix to PAM13.
+ .
+ Use up to 6 letters or digits only (no spaces or symbols).

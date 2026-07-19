@@ -1,0 +1,22 @@
+#!/bin/sh
+# config — ask for the WhalePi system name via debconf before install.
+set -e
+
+. /usr/share/debconf/confmodule
+
+# Ask, and re-ask until the answer is 1–6 alphanumeric characters.
+# In non-interactive mode db_input shows nothing and the (valid) default
+# "01" is used, so this loop terminates immediately.
+while :; do
+  db_input high whalepi/name || true
+  db_go || true
+  db_get whalepi/name
+  if printf '%s' "$RET" | grep -Eq '^[A-Za-z0-9]{1,6}$'; then
+    break
+  fi
+  # Invalid: clear the "seen" flag so it is asked again.
+  db_fset whalepi/name seen false || true
+  db_reset whalepi/name || true
+done
+
+exit 0

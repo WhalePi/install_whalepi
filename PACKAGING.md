@@ -18,9 +18,19 @@ sudo apt remove whalepi      # keeps firmware, recordings and database
 sudo apt purge  whalepi      # also removes the unpacked firmware
 ```
 
-On install, the package's `postinst` runs `install_whalepi.sh` with
-`SKIP_APT=1` (apt has already pulled the dependencies) to download the
-firmware and configure I2C, the microphone and Bluetooth.
+During install the package asks (via debconf) for a **short system name**
+(max 6 letters/digits, e.g. `13` → `WhalePi_13`). It then runs
+`install_whalepi.sh` with `SKIP_APT=1` (apt has already pulled the
+dependencies) to download the firmware, write the name into the WhalePiDog
+settings (`bluetoothSettings.identification` and `recordingPrefix`), and
+configure I2C, the microphone and Bluetooth.
+
+For an unattended install you can pre-seed the name instead of being asked:
+
+```bash
+echo "whalepi whalepi/name string 13" | sudo debconf-set-selections
+sudo DEBIAN_FRONTEND=noninteractive apt install -y ./whalepi_0.9.0-1_all.deb
+```
 
 ## Build it
 
@@ -66,6 +76,8 @@ sudo apt install ./whalepi_0.9.0-1_all.deb
 | `debian/changelog` | Version history (drives the package version) |
 | `debian/rules`     | Build recipe (debhelper) |
 | `debian/install`   | Installs `install_whalepi.sh` to `/usr/lib/whalepi/` |
+| `debian/config`    | Prompts (debconf) for the system name during install |
+| `debian/templates` | The debconf question + default for the system name |
 | `debian/postinst`  | Runs configuration after install |
 | `debian/postrm`    | Cleans up the firmware on `purge` (keeps data) |
 | `debian/copyright` | Licensing |
