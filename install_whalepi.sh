@@ -19,6 +19,8 @@
 # Options (environment variables):
 #   WHALEPI_VERSION   firmware release tag to install   (default: v0.9.0)
 #   WHALEPI_USER      target user / home owner          (default: whalepi)
+#   WHALEPI_NAME      short system name, max 6 letters/digits (e.g. 13 -> the
+#                     system is "WhalePi_13"). If unset you are prompted for it.
 #   ENABLE_LEGACY_BT  "1" to also enable legacy Bluetooth Serial (SPP)
 #   INSTALL_SERVICE   "1" to install the auto-start service at the end
 #   START_NOW         "1" to launch the watchdog when finished
@@ -35,6 +37,7 @@ set -euo pipefail
 # ----------------------------------------------------------------------------
 WHALEPI_VERSION="${WHALEPI_VERSION:-v0.9.0}"
 WHALEPI_USER="${WHALEPI_USER:-whalepi}"
+WHALEPI_NAME="${WHALEPI_NAME:-}"
 ENABLE_LEGACY_BT="${ENABLE_LEGACY_BT:-0}"
 INSTALL_SERVICE="${INSTALL_SERVICE:-0}"
 START_NOW="${START_NOW:-0}"
@@ -55,6 +58,48 @@ die()  { printf '\033[1;31m  ✗ %s\033[0m\n' "$*" >&2; exit 1; }
 # Run a command as the target (non-root) user
 as_user() { sudo -u "$WHALEPI_USER" "$@"; }
 
+# Valid system name: 1–6 characters, letters and digits only
+valid_name() {
+  case "$1" in
+    "" ) return 1 ;;               # empty
+    *[!A-Za-z0-9]* ) return 1 ;;   # any non-alphanumeric character
+  esac
+  [ "${#1}" -le 6 ]
+}
+
+# Obtain the system name from $WHALEPI_NAME or by prompting on the terminal.
+# Works even when the script is piped to `sudo bash` by reading from /dev/tty.
+prompt_name() {
+  if [ -n "$WHALEPI_NAME" ]; then
+    valid_name "$WHALEPI_NAME" \
+      || die "WHALEPI_NAME='$WHALEPI_NAME' is invalid — use up to 6 letters/digits only."
+    return
+  fi
+  if [ ! -r /dev/tty ]; then
+    die "No system name given. Re-run with WHALEPI_NAME=<name> (up to 6 letters/digits), e.g. WHALEPI_NAME=13"
+  fi
+  while :; do
+    printf 'Enter a short name for this WhalePi system (max 6 letters/digits, e.g. 13): ' > /dev/tty
+    IFS= read -r WHALEPI_NAME < /dev/tty || die "Could not read a name from the terminal."
+    if valid_name "$WHALEPI_NAME"; then
+      break
+    fi
+    printf '  Invalid — use 1 to 6 letters or digits only (no spaces or symbols).\n' > /dev/tty
+  done
+}
+
+# Locate the WhalePiDog settings JSON inside the firmware folder.
+find_settings_file() {
+  local f
+  for f in whalepidog_settings.json watchdog_settings.json watchdog_settngs.json; do
+    [ -f "$INSTALL_DIR/$f" ] && { printf '%s\n' "$INSTALL_DIR/$f"; return 0; }
+  done
+  # Fall back to the first *settings*.json shipped in the firmware root
+  f="$(find "$INSTALL_DIR" -maxdepth 2 -iname '*settings*.json' 2>/dev/null | head -n1)"
+  [ -n "$f" ] && { printf '%s\n' "$f"; return 0; }
+  return 1
+}
+
 # ----------------------------------------------------------------------------
 # Pre-flight checks
 # ----------------------------------------------------------------------------
@@ -67,10 +112,14 @@ HOME_DIR="$(getent passwd "$WHALEPI_USER" | cut -d: -f6)"
 [ -n "$HOME_DIR" ] || die "Could not determine home directory for $WHALEPI_USER"
 INSTALL_DIR="$HOME_DIR/pamguard_pizero"
 
+# Ask for the system name up front (before the long installs).
+prompt_name
+
 log "WhalePi installer"
 echo "    Release : $WHALEPI_VERSION"
 echo "    User    : $WHALEPI_USER ($HOME_DIR)"
 echo "    Target  : $INSTALL_DIR"
+echo "    Name    : WhalePi_$WHALEPI_NAME  (id=$WHALEPI_NAME, recordings=PAM$WHALEPI_NAME)"
 echo
 
 # ----------------------------------------------------------------------------
@@ -121,6 +170,28 @@ if [ ! -f "$HOME_DIR/whalepi_database.sqlite3" ]; then
   ok "Created blank database whalepi_database.sqlite3"
 else
   ok "Database already present"
+fi
+
+# ----------------------------------------------------------------------------
+# 3b. Apply the system name to the WhalePiDog settings
+#     identification -> <name>,  recordingPrefix -> PAM<name>
+# ----------------------------------------------------------------------------
+log "Applying system name 'WhalePi_$WHALEPI_NAME' to the WhalePiDog settings"
+if SETTINGS_FILE="$(find_settings_file)"; then
+  if as_user jq \
+        --arg id "$WHALEPI_NAME" \
+        --arg pref "PAM$WHALEPI_NAME" \
+        '.bluetoothSettings.identification = $id | .recordingPrefix = $pref' \
+        "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"; then
+    mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
+    chown "$WHALEPI_USER":"$WHALEPI_USER" "$SETTINGS_FILE"
+    ok "Set identification=$WHALEPI_NAME and recordingPrefix=PAM$WHALEPI_NAME in $(basename "$SETTINGS_FILE")"
+  else
+    rm -f "$SETTINGS_FILE.tmp"
+    warn "Could not update $SETTINGS_FILE (is it valid JSON?) — set identification/recordingPrefix by hand"
+  fi
+else
+  warn "No WhalePiDog settings JSON found in $INSTALL_DIR — skipping name configuration"
 fi
 
 # ----------------------------------------------------------------------------
@@ -228,7 +299,7 @@ fi
 # Done
 # ----------------------------------------------------------------------------
 echo
-ok "WhalePi installation complete!"
+ok "WhalePi installation complete!  System name: WhalePi_$WHALEPI_NAME"
 echo
 echo "Next steps:"
 echo "  • Reboot is recommended so I2C takes effect:   sudo reboot"

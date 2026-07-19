@@ -3,15 +3,22 @@
 # Depends:) have been installed by apt.
 set -e
 
+. /usr/share/debconf/confmodule
+
 SCRIPT=/usr/lib/whalepi/install_whalepi.sh
 
 case "$1" in
   configure)
+    # The system name collected by debconf (debian/config).
+    db_get whalepi/name || true
+    WHALEPI_NAME="${WHALEPI_NAME:-$RET}"
+
     if [ -x "$SCRIPT" ]; then
-      echo "Configuring WhalePi ..."
+      echo "Configuring WhalePi (WhalePi_${WHALEPI_NAME}) ..."
       # apt has already pulled the Depends:, so skip the apt stage.
       # Honour any operator overrides passed in the environment.
       SKIP_APT=1 \
+      WHALEPI_NAME="$WHALEPI_NAME" \
       WHALEPI_VERSION="${WHALEPI_VERSION:-v0.9.0}" \
       WHALEPI_USER="${WHALEPI_USER:-whalepi}" \
         sh "$SCRIPT" || {
