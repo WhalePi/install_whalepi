@@ -35,7 +35,7 @@ set -euo pipefail
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------
-WHALEPI_VERSION="${WHALEPI_VERSION:-v0.9.0}"
+WHALEPI_VERSION="${WHALEPI_VERSION:-v0.9.4}"
 WHALEPI_USER="${WHALEPI_USER:-whalepi}"
 WHALEPI_NAME="${WHALEPI_NAME:-}"
 ENABLE_LEGACY_BT="${ENABLE_LEGACY_BT:-0}"
