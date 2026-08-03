@@ -17,18 +17,18 @@
 #   sudo ./install_whalepi.sh
 #
 # Options (environment variables):
-#   WHALEPI_VERSION   firmware release tag to install   (default: v0.9.0)
+#   WHALEPI_VERSION   firmware release tag to install   (default: v0.9.4)
 #   WHALEPI_USER      target user / home owner          (default: whalepi)
 #   WHALEPI_NAME      short system name, max 6 letters/digits (e.g. 13 -> the
 #                     system is "WhalePi_13"). If unset you are prompted for it.
 #   ENABLE_LEGACY_BT  "1" to also enable legacy Bluetooth Serial (SPP)
-#   INSTALL_SERVICE   "1" to install the auto-start service at the end
+#   INSTALL_SERVICE   install the start-on-boot service (default: 1, "0" skips)
 #   START_NOW         "1" to launch the watchdog when finished
 #   SKIP_APT          "1" to skip apt installs (used by the .deb, whose
 #                     Depends: already provides the system packages)
 #
 # Example:
-#   sudo INSTALL_SERVICE=1 WHALEPI_VERSION=v0.9.0 ./install_whalepi.sh
+#   sudo WHALEPI_NAME=13 START_NOW=1 ./install_whalepi.sh
 #
 set -euo pipefail
 
@@ -39,7 +39,7 @@ WHALEPI_VERSION="${WHALEPI_VERSION:-v0.9.4}"
 WHALEPI_USER="${WHALEPI_USER:-whalepi}"
 WHALEPI_NAME="${WHALEPI_NAME:-}"
 ENABLE_LEGACY_BT="${ENABLE_LEGACY_BT:-0}"
-INSTALL_SERVICE="${INSTALL_SERVICE:-0}"
+INSTALL_SERVICE="${INSTALL_SERVICE:-1}"
 START_NOW="${START_NOW:-0}"
 SKIP_APT="${SKIP_APT:-0}"
 
@@ -263,33 +263,81 @@ chown -R "$WHALEPI_USER":"$WHALEPI_USER" "$INSTALL_DIR" "$HOME_DIR/PAMRecordings
 chmod +x "$INSTALL_DIR"/*.sh "$INSTALL_DIR"/utils/*.sh 2>/dev/null || true
 
 # ----------------------------------------------------------------------------
-# 8. (Optional) auto-start service
+# 8. Locate the watchdog launch script
+# ----------------------------------------------------------------------------
+TMUX_SCRIPT=""
+for cand in whalepidog_pizero_tmux.sh pamdog_pizero_tmux.sh; do
+  if [ -f "$INSTALL_DIR/$cand" ]; then
+    TMUX_SCRIPT="$cand"
+    chmod +x "$INSTALL_DIR/$cand"
+    break
+  fi
+done
+[ -n "$TMUX_SCRIPT" ] || warn "No watchdog launch script found in $INSTALL_DIR"
+
+# ----------------------------------------------------------------------------
+# 9. Auto-start service (set INSTALL_SERVICE=0 to skip)
+#
+# The unit is written here rather than delegating to the firmware's
+# utils/install_whalepidog_service.sh, so that it always exists, honours
+# WHALEPI_USER, and points at whichever launch script is actually shipped.
 # ----------------------------------------------------------------------------
 if [ "$INSTALL_SERVICE" = "1" ]; then
-  SVC_SCRIPT="$INSTALL_DIR/utils/install_whalepidog_service.sh"
-  if [ -f "$SVC_SCRIPT" ]; then
-    log "Installing auto-start service"
-    chmod +x "$SVC_SCRIPT"
-    ( cd "$INSTALL_DIR/utils" && bash "$SVC_SCRIPT" ) \
-      && ok "Service installed — WhalePi will start on boot" \
-      || warn "Service install reported a problem"
+  if [ -z "$TMUX_SCRIPT" ]; then
+    warn "Skipping boot service — no watchdog launch script to run"
+  elif ! command -v systemctl >/dev/null 2>&1; then
+    warn "systemctl not available — skipping boot service"
   else
-    warn "Service installer not found at $SVC_SCRIPT — skipping"
+    log "Installing auto-start service (whalepidog.service)"
+    SERVICE_FILE="/etc/systemd/system/whalepidog.service"
+    TMUX_BIN="$(command -v tmux 2>/dev/null || echo /usr/bin/tmux)"
+
+    cat > "$SERVICE_FILE" <<EOF
+[Unit]
+Description=WhalePiDog Watchdog (tmux)
+After=network.target
+
+[Service]
+Type=forking
+User=$WHALEPI_USER
+WorkingDirectory=$INSTALL_DIR
+ExecStart=$INSTALL_DIR/$TMUX_SCRIPT
+ExecStop=$TMUX_BIN kill-session -t pamguard
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    chmod 0644 "$SERVICE_FILE"
+    ok "Wrote $SERVICE_FILE"
+
+    systemctl daemon-reload || warn "systemctl daemon-reload failed"
+
+    systemctl enable whalepidog.service || warn "systemctl enable reported an error"
+    if systemctl is-enabled whalepidog.service >/dev/null 2>&1; then
+      ok "Service enabled — WhalePi will start on boot"
+    else
+      warn "Service did NOT enable. Check: systemctl status whalepidog"
+    fi
   fi
 fi
 
 # ----------------------------------------------------------------------------
-# 9. (Optional) start the watchdog now
+# 10. (Optional) start the watchdog now
 # ----------------------------------------------------------------------------
 if [ "$START_NOW" = "1" ]; then
-  TMUX_SCRIPT=""
-  for cand in whalepidog_pizero_tmux.sh pamdog_pizero_tmux.sh; do
-    [ -f "$INSTALL_DIR/$cand" ] && TMUX_SCRIPT="$cand" && break
-  done
-  if [ -n "$TMUX_SCRIPT" ]; then
+  if [ "$INSTALL_SERVICE" = "1" ] && [ -f /etc/systemd/system/whalepidog.service ]; then
+    log "Starting whalepidog service"
+    if systemctl start whalepidog.service; then
+      ok "Service started — attach with: tmux attach -t pamguard"
+    else
+      warn "Could not start the service. Check: systemctl status whalepidog"
+    fi
+  elif [ -n "$TMUX_SCRIPT" ]; then
     log "Starting watchdog ($TMUX_SCRIPT)"
     as_user bash -c "cd '$INSTALL_DIR' && ./'$TMUX_SCRIPT'" \
-      && ok "Watchdog started in tmux session 'pamguard'"
+      && ok "Watchdog started in tmux session 'pamguard'" \
+      || warn "Watchdog launch reported a problem"
   else
     warn "Could not find a tmux launch script — start it manually"
   fi
@@ -303,7 +351,14 @@ ok "WhalePi installation complete!  System name: WhalePi_$WHALEPI_NAME"
 echo
 echo "Next steps:"
 echo "  • Reboot is recommended so I2C takes effect:   sudo reboot"
-echo "  • Start the watchdog:   cd $INSTALL_DIR && ./whalepidog_pizero_tmux.sh"
-echo "  • Attach to it:         tmux attach -t pamguard"
-[ "$INSTALL_SERVICE" = "1" ] || \
-echo "  • To auto-start on boot, re-run with: sudo INSTALL_SERVICE=1 $0"
+if systemctl is-enabled whalepidog.service >/dev/null 2>&1; then
+  echo "  • WhalePi will start automatically on boot (whalepidog.service)"
+  echo "  • Start it now:         sudo systemctl start whalepidog"
+  echo "  • Check it:             systemctl status whalepidog"
+  echo "  • Disable auto-start:   sudo systemctl disable whalepidog"
+else
+  echo "  • Auto-start is NOT enabled. Re-run with: sudo INSTALL_SERVICE=1 $0"
+  [ -n "${TMUX_SCRIPT:-}" ] && \
+  echo "  • Start manually:       cd $INSTALL_DIR && ./$TMUX_SCRIPT"
+fi
+echo "  • Attach to the session: tmux attach -t pamguard"

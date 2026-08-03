@@ -52,7 +52,7 @@ Then, with the Pi connected to the internet, install everything with a single co
 curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh | sudo bash
 ```
 
-This installs all prerequisites (Java 21, Bluetooth support, tmux, etc.), downloads PAMGuard and configures the Pi. Prefer `apt`? A `.deb` is also available (`sudo apt install ./whalepi_*.deb`) — see [PACKAGING.md](https://github.com/WhalePi/install_whalepi/blob/main/PACKAGING.md). To run the steps manually instead, follow [install.md](https://github.com/WhalePi/install_whalepi/blob/main/install.md).
+This installs all prerequisites (Java 21, Bluetooth support, tmux, etc.), downloads PAMGuard, configures the Pi, and installs the `whalepidog` service so PAMGuard **starts automatically on boot**. Prefer `apt`? A `.deb` is also available (`sudo apt install ./whalepi_*.deb`) — see [PACKAGING.md](https://github.com/WhalePi/install_whalepi/blob/main/PACKAGING.md). To run the steps manually instead, follow [install.md](https://github.com/WhalePi/install_whalepi/blob/main/install.md).
   
 ### Start WhalePi
 
@@ -67,14 +67,26 @@ Nothing will happen in terminal - pamguard has been started in the background.
 
  
 ### Set PAMGuard to start automatically
-   
-Navigate the `/home/whalepi/pamguard_pizero/utils` and run the background installer
+
+If you used the one-line installer above this is **already done** — it installs and enables the `whalepidog` systemd service, so PAMGuard starts whenever the Raspberry Pi Zero powers on. Check it with:
 
 ```bash
-install_whalepidog_service.sh`
+systemctl status whalepidog
 ```
 
-PAMGuard will now start running whenever the Raspberry Pi Zero powers on.
+Handy commands:
+
+```bash
+sudo systemctl start whalepidog     # start now
+sudo systemctl stop whalepidog      # stop
+sudo systemctl disable whalepidog   # turn off auto-start
+```
+
+If you installed manually instead, navigate to `/home/whalepi/pamguard_pizero/utils` and run the background installer:
+
+```bash
+sudo ./install_whalepidog_service.sh
+```
  
 > Tip: [troubleshoot.md](https://github.com/WhalePi/install_whalepi/blob/main/troubleshoot.md) has some handy tips for troubleshooting
 

@@ -65,16 +65,26 @@ curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install
   | sudo WHALEPI_NAME=13 bash
 ```
 
+The installer also sets up the **`whalepidog` systemd service**, so WhalePi starts automatically whenever the Pi powers on. After installing you can check it with:
+
+```bash
+systemctl status whalepidog
+```
+
 Useful options:
 
 ```bash
-# Also install the auto-start-on-boot service and start the watchdog now:
+# Start the watchdog immediately as well as on boot:
 curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh \
-  | sudo INSTALL_SERVICE=1 START_NOW=1 bash
+  | sudo START_NOW=1 bash
+
+# Do NOT set up start-on-boot:
+curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh \
+  | sudo INSTALL_SERVICE=0 bash
 
 # Also enable legacy Bluetooth Serial (SPP), pick a specific firmware version:
 curl -sSL https://raw.githubusercontent.com/WhalePi/install_whalepi/main/install_whalepi.sh \
-  | sudo ENABLE_LEGACY_BT=1 WHALEPI_VERSION=v0.9.0 bash
+  | sudo ENABLE_LEGACY_BT=1 WHALEPI_VERSION=v0.9.4 bash
 ```
 
 Prefer to inspect before running? Download it first:
@@ -108,7 +118,7 @@ The easiest way to transfer the firmware is to download it from github and then 
 
 ```bash
 cd /home/whalepi/
-wget https://github.com/WhalePi/install_whalepi/releases/download/v0.9.1/pamguard_pizero.zip
+wget https://github.com/WhalePi/install_whalepi/releases/download/v0.9.4/pamguard_pizero.zip
 ```
 
 > [!TIP]
