@@ -19,7 +19,7 @@ case "$1" in
       # Honour any operator overrides passed in the environment.
       SKIP_APT=1 \
       WHALEPI_NAME="$WHALEPI_NAME" \
-      WHALEPI_VERSION="${WHALEPI_VERSION:-v0.9.0}" \
+      WHALEPI_VERSION="${WHALEPI_VERSION:-v0.9.4}" \
       WHALEPI_USER="${WHALEPI_USER:-whalepi}" \
         sh "$SCRIPT" || {
           echo "WhalePi configuration did not fully complete." >&2

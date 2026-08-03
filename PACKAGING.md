@@ -11,7 +11,7 @@ PAMGuard firmware at install time, so the same `.deb` works on any Pi.
 
 ```bash
 # Install (resolves Java 21, tmux, sqlite3, BLE deps, ... automatically)
-sudo apt install ./whalepi_0.9.0-1_all.deb
+sudo apt install ./whalepi_0.9.4-1_all.deb
 
 # Remove
 sudo apt remove whalepi      # keeps firmware, recordings and database
@@ -29,7 +29,7 @@ For an unattended install you can pre-seed the name instead of being asked:
 
 ```bash
 echo "whalepi whalepi/name string 13" | sudo debconf-set-selections
-sudo DEBIAN_FRONTEND=noninteractive apt install -y ./whalepi_0.9.0-1_all.deb
+sudo DEBIAN_FRONTEND=noninteractive apt install -y ./whalepi_0.9.4-1_all.deb
 ```
 
 ## Build it
@@ -60,12 +60,12 @@ lintian ../whalepi_*.deb
 
 ## Distribute it
 
-Attach the resulting `whalepi_0.9.0-1_all.deb` to the matching
+Attach the resulting `whalepi_0.9.4-1_all.deb` to the matching
 **GitHub Release**. Users then install with:
 
 ```bash
-wget https://github.com/WhalePi/install_whalepi/releases/download/v0.9.0/whalepi_0.9.0-1_all.deb
-sudo apt install ./whalepi_0.9.0-1_all.deb
+wget https://github.com/WhalePi/install_whalepi/releases/download/v0.9.4/whalepi_0.9.4-1_all.deb
+sudo apt install ./whalepi_0.9.4-1_all.deb
 ```
 
 ## Files

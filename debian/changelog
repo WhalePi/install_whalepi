@@ -1,7 +1,7 @@
-whalepi (0.9.0-1) stable; urgency=medium
+whalepi (0.9.4-1) stable; urgency=medium
 
   * Initial Debian packaging of the WhalePi installer.
-  * Installs prerequisites, downloads the PAMGuard firmware (v0.9.0) and
+  * Installs prerequisites, downloads the PAMGuard firmware (v0.9.4) and
     configures the Raspberry Pi Zero.
   * Prompts (via debconf) for a short system name and writes it to the
     WhalePiDog settings (bluetoothSettings.identification and recordingPrefix).
