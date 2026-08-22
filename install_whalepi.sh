@@ -295,12 +295,23 @@ if [ "$INSTALL_SERVICE" = "1" ]; then
     cat > "$SERVICE_FILE" <<EOF
 [Unit]
 Description=WhalePiDog Watchdog (tmux)
-After=network.target
+# bluetooth.service must be up before the watchdog starts its BLE peripheral.
+# With only network.target the watchdog wins the race on a cold boot, finds no
+# adapter and never becomes discoverable. Ordering is not a guarantee that hci0
+# is enumerated, so ble_server.py also waits for the adapter to appear.
+After=network.target dbus.service bluetooth.service
+Wants=bluetooth.service
 
 [Service]
 Type=forking
 User=$WHALEPI_USER
 WorkingDirectory=$INSTALL_DIR
+# This controller rejects BlueZ's instance-based Add Advertising, so LE
+# visibility comes from the legacy Set Advertising toggle instead.  That is
+# runtime state and does not survive a reboot, so re-apply it on every start.
+# The leading '+' runs this as root rather than as \$WHALEPI_USER; '|| true'
+# keeps a controller that does not need it from blocking startup.
+ExecStartPre=+/bin/sh -c '/usr/bin/btmgmt --index 0 advertising on || true'
 ExecStart=$INSTALL_DIR/$TMUX_SCRIPT
 ExecStop=$TMUX_BIN kill-session -t pamguard
 RemainAfterExit=yes
