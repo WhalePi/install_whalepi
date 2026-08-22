@@ -269,7 +269,7 @@ Navigate to Interface Options. Select I2C and choose Yes to enable it. Finish an
 To ensure things are running smoothly, launch the watchdog script. This initializes a new **tmux** session, allowing the process to persist even if you disconnect from SSH.
 
 ```bash
-./pamdog_pizero_tmux.sh
+./whalepidog_pizero_tmux.sh
 ```
 
 ---
