@@ -309,9 +309,13 @@ WorkingDirectory=$INSTALL_DIR
 # This controller rejects BlueZ's instance-based Add Advertising, so LE
 # visibility comes from the legacy Set Advertising toggle instead.  That is
 # runtime state and does not survive a reboot, so re-apply it on every start.
-# The leading '+' runs this as root rather than as \$WHALEPI_USER; '|| true'
-# keeps a controller that does not need it from blocking startup.
-ExecStartPre=+/bin/sh -c '/usr/bin/btmgmt --index 0 advertising on || true'
+# The leading '+' runs this as root rather than as \$WHALEPI_USER.  btmgmt is
+# built on bt_shell and blocks rather than exiting when the controller is not
+# ready yet, which hangs start-pre until the start timeout and fails the whole
+# unit, so it is capped with 'timeout' and given no stdin.  '|| true' then
+# covers both a timeout and a controller that does not need the toggle: BLE
+# visibility is best-effort here and ble_server.py waits for the adapter.
+ExecStartPre=+/bin/sh -c 'timeout 10 /usr/bin/btmgmt --index 0 advertising on </dev/null >/dev/null 2>&1 || true'
 ExecStart=$INSTALL_DIR/$TMUX_SCRIPT
 ExecStop=$TMUX_BIN kill-session -t pamguard
 RemainAfterExit=yes
@@ -372,4 +376,11 @@ else
   [ -n "${TMUX_SCRIPT:-}" ] && \
   echo "  • Start manually:       cd $INSTALL_DIR && ./$TMUX_SCRIPT"
 fi
-echo "  • Attach to the session: tmux attach -t pamguard"
+# The session belongs to $WHALEPI_USER, so it is only on that user's tmux
+# socket -- attaching from another login shows "no sessions" even when the
+# watchdog is running.  Spell the command out for whoever is installing.
+if [ "$WHALEPI_USER" = "${SUDO_USER:-root}" ]; then
+  echo "  • Attach once running:  tmux attach -t pamguard"
+else
+  echo "  • Attach once running:  sudo -u $WHALEPI_USER tmux attach -t pamguard"
+fi
